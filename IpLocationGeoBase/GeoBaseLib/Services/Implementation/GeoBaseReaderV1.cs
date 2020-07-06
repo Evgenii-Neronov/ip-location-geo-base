@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using GeoBaseLib.Models;
 
 namespace GeoBaseLib.Services.Implementation
@@ -36,7 +34,6 @@ namespace GeoBaseLib.Services.Implementation
                 }
             }
         }
-
 
         public void InitLocations(byte[] bytes, ulong size, ref Location[] locations)
         {
