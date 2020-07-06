@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace GeoBaseLib.Helpers
 {
-    internal static class BinaryReaderHelper 
+    public static class BinaryReaderHelper 
     {
-
         public static void RawDeserializerList<T>(byte[] bytes, uint size, int structSize, ref T[] array) where T : struct
         {
             var unmanagedPointer = Marshal.AllocHGlobal(bytes.Length);
@@ -31,6 +31,11 @@ namespace GeoBaseLib.Helpers
             }
 
             Marshal.FreeHGlobal(unmanagedPointer);
+        }
+        
+        public static string ConvertToString(this byte[] bytes)
+        {
+            return Encoding.ASCII.GetString(bytes, 0, bytes.Length);
         }
     }
 }

@@ -8,14 +8,14 @@ namespace ConsoleApp
 {
     public class Logger : StreamWriter
     {
-        public void LogInfo(string str)
+        public void LogInfo(object data)
         {
-            this.WriteLine($"[{Thread.CurrentThread.ManagedThreadId} Info {DateTime.Now.ToLongTimeString()}]\t{str}");
+            this.WriteLine($"[{Thread.CurrentThread.ManagedThreadId} Info {DateTime.Now.ToLongTimeString()}]\t{data}");
         }
 
-        public void LogError(string str, string stackTrace = null)
+        public void LogError(object data, string stackTrace = null)
         {
-            this.WriteLine($"[{Thread.CurrentThread.ManagedThreadId} Error {DateTime.Now.ToLongTimeString()}]\t{str}");
+            this.WriteLine($"[{Thread.CurrentThread.ManagedThreadId} Error {DateTime.Now.ToLongTimeString()}]\t{data}");
 
             if(stackTrace != null)
                 this.WriteLine(stackTrace);

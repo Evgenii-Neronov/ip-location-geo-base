@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using GeoBaseLib.Helpers;
 using GeoBaseLib.Models;
 
 namespace ConsoleApp
@@ -47,6 +48,21 @@ namespace ConsoleApp
             };
 
             geoBase.Init();
+
+            foreach (var l in geoBase.Locations)
+            {
+                Logger.LogInfo(l.City.ConvertToString());
+                break;
+            }
+
+            var index = geoBase.GeoIndexes.Locations_City["cit_Anetositoz"];
+
+
+            // check indexes for myself
+            Logger.LogInfo(geoBase.IpRanges[index].IpTo);
+            Logger.LogInfo(geoBase.IpRanges[index].LocationIndex);
+            Logger.LogInfo(index);
+
         }
 
         private static void LogHeader(Header header)
@@ -63,14 +79,9 @@ namespace ConsoleApp
             Logger.LogInfo($"");
         }
 
-        public static void Print(object str)
-        {
-            Console.WriteLine(str);
-        }
-
         public static DateTime GetDateTimeFromUInt(ulong seconds)
         {
-            System.DateTime dtDateTime = new DateTime(1970, 1, 1);
+            var dtDateTime = new DateTime(1970, 1, 1);
             dtDateTime = dtDateTime.AddSeconds(seconds).ToLocalTime();
             return dtDateTime;
         }

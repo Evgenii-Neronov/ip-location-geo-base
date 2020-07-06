@@ -1,9 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using GeoBaseLib.Helpers;
-using GeoBaseLib.Services.Implementation;
 
 namespace GeoBaseLib.Models
 {
@@ -14,6 +11,8 @@ namespace GeoBaseLib.Models
         public Location[] Locations { get; set; }
 
         public RawData RawData { get; set; }
+
+        public GeoIndexes GeoIndexes { get; set; }
 
         public GeoBase(string geoBaseFileDb) : base(geoBaseFileDb)
         {
@@ -44,6 +43,11 @@ namespace GeoBaseLib.Models
                 Marshal.SizeOf<Location>(), 
                 ref locations);
 
+            IpRanges = ipRanges;
+            Locations = locations;
+
+            InitIndexes();
+
             OnIndexesCreated?.Invoke();
         }
 
@@ -65,6 +69,14 @@ namespace GeoBaseLib.Models
                 locations[i] = new Location();
 
             return locations;
+        }
+
+        public void InitIndexes()
+        {
+            this.GeoIndexes = new GeoIndexes();
+
+            this.GeoIndexes.InitIpRangesIndex(this.IpRanges);
+            this.GeoIndexes.InitLocationsIndex(this.Locations);
         }
     }
 }

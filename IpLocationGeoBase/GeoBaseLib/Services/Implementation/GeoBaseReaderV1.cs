@@ -8,8 +8,6 @@ namespace GeoBaseLib.Services.Implementation
 {
     public class GeoBaseReaderV1 
     {
-        private HashSet<int> hashSet = new HashSet<int>();
-
         public Header ReadHeader(BinaryReader br)
         {
             return new Header()
@@ -27,8 +25,6 @@ namespace GeoBaseLib.Services.Implementation
 
         public void InitIpRanges(byte[] bytes, ulong size, ref IpRange[] ipRanges)
         {
-            hashSet.Add(Thread.CurrentThread.ManagedThreadId);
-
             using (var stream = new MemoryStream(bytes))
             using (var br = new BinaryReader(stream))
             {
@@ -44,8 +40,6 @@ namespace GeoBaseLib.Services.Implementation
 
         public void InitLocations(byte[] bytes, ulong size, ref Location[] locations)
         {
-            hashSet.Add(Thread.CurrentThread.ManagedThreadId);
-
             using (var stream = new MemoryStream(bytes))
             using (var br = new BinaryReader(stream))
             {
@@ -60,16 +54,6 @@ namespace GeoBaseLib.Services.Implementation
                     locations[i].Longitude = BitConverter.ToSingle(br.ReadBytes(4), 0);
                 }
             }
-        }
-
-        public void PrintThreads()
-        {
-            foreach (var t in hashSet)
-            {
-                Console.Write($"{t}, ");
-            }
-
-            Console.WriteLine();
         }
     }
 }

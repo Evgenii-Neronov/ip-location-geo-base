@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Program.cs~RF18bcaf6b.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GeoBaseLib\GeoBaseLib.csproj" />
   </ItemGroup>
 
