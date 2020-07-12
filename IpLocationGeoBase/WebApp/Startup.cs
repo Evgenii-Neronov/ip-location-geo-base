@@ -39,6 +39,11 @@ public class Startup
             options.AddLocalization();
         });
 
+        services.AddMvc(options =>
+        {
+            options.RespectBrowserAcceptHeader = true; // false by default
+        });
+        
         InitializeContainer();
     }
 

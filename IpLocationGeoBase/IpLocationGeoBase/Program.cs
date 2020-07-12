@@ -59,13 +59,16 @@ namespace ConsoleApp
                     break;
                 }
 
-                var index = geoBase.GeoIndexes.Locations_City["cit_Anetositoz"];
+                var index = geoBase.GeoIndexes.City_IpLocationIndex["cit_Anetositoz"];
 
 
                 // check indexes for myself
-                Logger.LogInfo(geoBase.IpRanges[index].IpTo);
+                Logger.LogInfo(geoBase.IpRanges[index].IpTo.IpToString());
                 Logger.LogInfo(geoBase.IpRanges[index].LocationIndex);
                 Logger.LogInfo(index);
+
+
+                Logger.LogInfo($" count of Ranges: {geoBase.IpRanges.Length}, count of locations: {geoBase.Locations.Length}");
             }
 
         }

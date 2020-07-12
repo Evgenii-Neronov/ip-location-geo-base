@@ -1,8 +1,45 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <h2>Vertical Tabs</h2>
+    <p>Click on the buttons inside the tabbed menu:</p>
+
+    <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'SearchByIp')" id="defaultOpen">Поиск по Ip</button>
+        <button class="tablinks" onclick="openCity(event, 'SearchByCity')">Поиск по городу</button>
+    </div>
+
+    <div id="SearchByIp" class="tabcontent">
+        <h3>London</h3>
+        <p>London is the capital city of England.</p>
+    </div>
+
+    <div id="SearchByCity" class="tabcontent">
+        <h3>Paris</h3>
+        <p>Paris is the capital of France.</p>
+    </div>
+
+    <script>
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        document.getElementById("defaultOpen").click();
+    </script>
+
+</body>
+</html>
