@@ -1,57 +1,67 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SimpleInjector;
+using WebApp.Services;
+using WebApp.Services.Implementation;
 
-namespace WebApp
+public class Startup
 {
-    public class Startup
+    private readonly Container _container = new SimpleInjector.Container();
+
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        _container.Options.ResolveUnregisteredConcreteTypes = false;
+
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddControllersWithViews();
+
+        services.AddLogging();
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+        services.AddSimpleInjector(_container, options =>
         {
-            Configuration = configuration;
-        }
+            options.AddAspNetCore()
+                .AddControllerActivation()
+                .AddViewComponentActivation()
+                .AddPageModelActivation()
+                .AddTagHelperActivation();
 
-        public IConfiguration Configuration { get; }
+            options.AddLogging();
+            options.AddLocalization();
+        });
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        InitializeContainer();
+    }
+
+    private void InitializeContainer()
+    {
+        _container.Register<IGeoBaseService, GeoBaseService>(Lifestyle.Singleton);
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        app.UseSimpleInjector(_container);
+
+        app.UseStaticFiles();
+        app.UseRouting();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
         {
-            services.AddControllersWithViews();
-        }
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=GeoBase}/{action=Index}/{id?}");
+        });
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
-        }
+        _container.Verify();
     }
 }
