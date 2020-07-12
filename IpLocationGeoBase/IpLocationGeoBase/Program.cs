@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using GeoBaseLib.Helpers;
 using GeoBaseLib.Models;
 
@@ -33,35 +34,39 @@ namespace ConsoleApp
 
         public static void LoadGeoBase()
         {
-            var geoBase = new GeoBase(fileName);
-
-            geoBase.OnFileLoaded = (header) =>
+            using (var binaryReader = new BinaryReader(File.Open(fileName,
+                FileMode.Open)))
             {
-                Logger.LogInfo($"File loaded: {sw.GetFormattedElapsed()}");
+                var geoBase = new GeoBase(binaryReader);
 
-                LogHeader(header);
-            };
+                geoBase.OnFileLoaded = (header) =>
+                {
+                    Logger.LogInfo($"File loaded: {sw.GetFormattedElapsed()}");
 
-            geoBase.OnIndexesCreated = () =>
-            {
-                Logger.LogInfo($"Indexes created: {sw.GetFormattedElapsed()}");
-            };
+                    LogHeader(header);
+                };
 
-            geoBase.Init();
+                geoBase.OnIndexesCreated = () =>
+                {
+                    Logger.LogInfo($"Indexes created: {sw.GetFormattedElapsed()}");
+                };
 
-            foreach (var l in geoBase.Locations)
-            {
-                Logger.LogInfo(l.City.ConvertToString());
-                break;
+                geoBase.Init();
+
+                foreach (var l in geoBase.Locations)
+                {
+                    Logger.LogInfo(l.City.ConvertToString());
+                    break;
+                }
+
+                var index = geoBase.GeoIndexes.Locations_City["cit_Anetositoz"];
+
+
+                // check indexes for myself
+                Logger.LogInfo(geoBase.IpRanges[index].IpTo);
+                Logger.LogInfo(geoBase.IpRanges[index].LocationIndex);
+                Logger.LogInfo(index);
             }
-
-            var index = geoBase.GeoIndexes.Locations_City["cit_Anetositoz"];
-
-
-            // check indexes for myself
-            Logger.LogInfo(geoBase.IpRanges[index].IpTo);
-            Logger.LogInfo(geoBase.IpRanges[index].LocationIndex);
-            Logger.LogInfo(index);
 
         }
 

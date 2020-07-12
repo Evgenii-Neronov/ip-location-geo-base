@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using GeoBaseLib.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
@@ -25,8 +27,14 @@ namespace WebApp.Controllers
 
             using (var reader = embeddedProvider.GetFileInfo(@"Content\geobase.dat").CreateReadStream())
             {
-                var b = reader.ReadByte();
-                s = b.ToString();
+                using (var br = new BinaryReader(reader))
+                {
+                    var geoBase = new GeoBase(br);
+
+                    geoBase.Init();
+
+                    s = geoBase.Locations.Length.ToString();
+                }
             }
 
             return "test " + DateTime.Now.ToString() + " " + s;

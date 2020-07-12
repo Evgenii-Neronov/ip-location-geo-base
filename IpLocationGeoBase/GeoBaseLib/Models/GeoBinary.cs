@@ -4,9 +4,9 @@ using GeoBaseLib.Services.Implementation;
 
 namespace GeoBaseLib.Models
 {
-    public class GeoFile
+    public class GeoBinary
     {
-        private readonly string geoBaseFileDb;
+        private readonly BinaryReader binaryReader;
 
         public Header Header { get; set; }
 
@@ -14,24 +14,21 @@ namespace GeoBaseLib.Models
 
         public FileLoaded OnFileLoaded;
 
-        public GeoFile(string geoBaseFileDb)
+        public GeoBinary(BinaryReader binaryReader)
         {
-            this.geoBaseFileDb = geoBaseFileDb;
+            this.binaryReader = binaryReader;
         }
 
-        public RawData ReadFile()
+        public RawData ReadBinaries()
         {
-            using (var br = new BinaryReader(File.Open(geoBaseFileDb,
-                FileMode.Open)))
-            {
                 var reader1 = new GeoBaseReaderV1();
 
-                this.Header = reader1.ReadHeader(br);
+                this.Header = reader1.ReadHeader(this.binaryReader);
 
                 var ipRangesCount = (this.Header.OffsetLocations - 60) / 12;
                 var locationsCount = (this.Header.OffsetCities - 60 - this.Header.OffsetLocations) / 96;
 
-                ReadBytesCollections(br,
+                ReadBytesCollections(this.binaryReader,
                     out var ipRangesBytes,
                     ipRangesCount,
                     out var locationsBytes,
@@ -46,7 +43,6 @@ namespace GeoBaseLib.Models
                     LocationsBytes = locationsBytes,
                     LocationsCount = locationsCount,
                 };
-            }
         }
 
         private void ReadBytesCollections(BinaryReader br,

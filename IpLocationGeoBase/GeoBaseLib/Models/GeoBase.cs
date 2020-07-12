@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using GeoBaseLib.Helpers;
 
 namespace GeoBaseLib.Models
 {
-    public class GeoBase : GeoFile
+    public class GeoBase : GeoBinary
     {
         public IpRange[] IpRanges { get; set; }
 
@@ -14,7 +15,7 @@ namespace GeoBaseLib.Models
 
         public GeoIndexes GeoIndexes { get; set; }
 
-        public GeoBase(string geoBaseFileDb) : base(geoBaseFileDb)
+        public GeoBase(BinaryReader binaryReader) : base(binaryReader)
         {
 
         }
@@ -23,7 +24,7 @@ namespace GeoBaseLib.Models
         
         public void Init()
         {
-            this.RawData = this.ReadFile();
+            this.RawData = this.ReadBinaries();
 
             this.IpRanges = this.GetEmptyRangesIps(this.RawData.IpRangesCount);
             this.Locations = this.GetEmptyLocations(this.RawData.LocationsCount);
