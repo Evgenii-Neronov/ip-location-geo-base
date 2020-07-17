@@ -9,13 +9,13 @@ using WebApp.Services;
 namespace WebApp.ApiControllers
 {
     [ApiController]
-    public class GeoBaseController : ControllerBase
+    public class GeoBaseApiController : ControllerBase
     {
         private readonly IGeoBaseService _geoBaseService;
 
         private GeoBase GeoBase => _geoBaseService.GetGeoBase();
 
-        public GeoBaseController(IGeoBaseService geoBaseService)
+        public GeoBaseApiController(IGeoBaseService geoBaseService)
         {
             this._geoBaseService = geoBaseService;
         }

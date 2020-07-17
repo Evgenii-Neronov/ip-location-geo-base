@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using GeoBaseLib.Helpers;
 using GeoBaseLib.Models;
 
@@ -57,6 +58,14 @@ namespace ConsoleApp
                 {
                     Logger.LogInfo(l.City.ConvertToString());
                     break;
+                }
+
+                var groups = geoBase.Locations.GroupBy(x => x.City);
+
+                var counter = 0;
+                foreach (var g in groups.OrderBy(x=>x.Count()))
+                {
+                    Logger.LogInfo($"{counter++} {g.Key.ConvertToString()} - {g.Count()}");
                 }
 
                 var index = geoBase.GeoIndexes.City_IpLocationIndex["cit_Anetositoz"];
